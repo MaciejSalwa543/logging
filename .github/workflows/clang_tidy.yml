@@ -17,6 +17,10 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
   merge_group:
+  push:
+    branches:
+      - "experimental/**"
+  workflow_dispatch:
 
 permissions:
   contents: read
