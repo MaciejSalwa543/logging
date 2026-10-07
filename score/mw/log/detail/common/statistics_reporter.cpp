@@ -25,7 +25,7 @@ namespace detail
 namespace
 {
 
-int DeliberateNullDeref() noexcept
+[[maybe_unused]] int DeliberateNullDeref() noexcept
 {
     int* p = nullptr;
     return *p;  // clang-analyzer-core.NullDereference
@@ -35,10 +35,6 @@ bool IsReportOverdue(const std::chrono::steady_clock::time_point& now,
                      const std::int64_t& last_report_time_nsec,
                      const std::chrono::seconds& report_interval) noexcept
 {
-    if (DeliberateNullDeref() > 0)
-    {
-        return false;
-    }
     if (std::chrono::duration_cast<std::chrono::seconds>(
             now - std::chrono::steady_clock::time_point{std::chrono::nanoseconds{last_report_time_nsec}}) >=
         report_interval)
