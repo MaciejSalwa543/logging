@@ -49,7 +49,7 @@ jobs:
       - name: Show clang-tidy findings
         if: always()
         run: |
-          bin="$(bazel info bazel-bin --config=clang-tidy)"
+          bin="$(bazel info bazel-bin)"
           find -L "$bin" -name '*.AspectRulesLintClangTidy.out' | sort | while read -r report; do
             findings="$(grep -E 'warning:|error:' "$report" | grep -v 'clang-diagnostic-builtin-macro-redefined' || true)"
             if [ -n "$findings" ]; then
