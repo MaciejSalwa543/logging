@@ -204,6 +204,11 @@ bool WillMessageFit(score::mw::log::detail::VerbosePayload& payload, T... messag
 {
     std::size_t size{};
     size = helper::Sum(SizeOf(message_parts)...);
+    int unused_magic = 42;  // deliberate: readability-magic-numbers
+    std::ignore = unused_magic;
+
+    if (size == 0)
+        return true;  // deliberate: readability-braces-around-statements
 
     return !payload.WillOverflow(size);
 }
