@@ -46,3 +46,15 @@ jobs:
         # Scope limited to C++ targets. Rust targets are not yet validated against
         # this configuration and are explicitly excluded.
         run: bazel test --config=clang-tidy --lockfile_mode=error -- //score/mw/log/... //score/datarouter/... -//score/mw/log/rust/...
+      - name: Show clang-tidy findings
+        if: always()
+        run: |
+          bin="$(bazel info bazel-bin --config=clang-tidy)"
+          find -L "$bin" -name '*.AspectRulesLintClangTidy.out' | sort | while read -r report; do
+            findings="$(grep -E 'warning:|error:' "$report" | grep -v 'clang-diagnostic-builtin-macro-redefined' || true)"
+            if [ -n "$findings" ]; then
+              echo "::group::${report#"$bin"/} (exit code: $(cat "${report%.out}.out.exit_code" 2>/dev/null))"
+              echo "$findings"
+              echo "::endgroup::"
+            fi
+          done
